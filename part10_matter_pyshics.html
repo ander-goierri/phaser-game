@@ -1,0 +1,139 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Making your first Phaser 3 Game - Part 10</title>
+    <script src="./phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    physics: {
+        default: 'matter',
+        matter: {
+            gravity: { y: 1 },
+            debug: true
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
+
+var player;
+var stars;
+var bombs;
+var platforms;
+var cursors;
+var score = 0;
+var gameOver = false;
+var scoreText;
+
+var game = new Phaser.Game(config);
+
+function preload ()
+{
+    this.load.image('sky', 'assets/sky_and_beach.png');
+    this.load.image('ground', 'assets/platform.png');
+    this.load.image('star', 'assets/green_star.png');
+    this.load.image('bomb', 'assets/bomb.png');
+    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+}
+
+function create () {
+  this.add.image(400, 300, 'sky');
+
+  // Suelo (estático)
+  const ground = this.matter.add.image(400, 568, 'ground', null, { isStatic: true });
+  ground.setScale(2);
+
+  // Ledges (estáticos)
+  this.matter.add.image(600, 400, 'ground', null, { isStatic: true });
+  this.matter.add.image(50, 250, 'ground', null, { isStatic: true });
+  this.matter.add.image(750, 220, 'ground', null, { isStatic: true });
+
+  // Player (dinámico)
+  player = this.matter.add.sprite(100, 450, 'dude');
+  player.setFixedRotation();        // evita que rote como una caja
+  player.setBounce(0.0);            // restitution
+  player.setFriction(0.1);
+
+  cursors = this.input.keyboard.createCursorKeys();
+}
+
+function update () {
+  const speed = 3.5;
+
+  if (cursors.left.isDown) {
+    player.setVelocityX(-speed);
+    player.anims.play('left', true);
+  } else if (cursors.right.isDown) {
+    player.setVelocityX(speed);
+    player.anims.play('right', true);
+  } else {
+    player.setVelocityX(0);
+    player.anims.play('turn', true);
+  }
+
+  // “Suelo” aproximado:
+  if (cursors.up.isDown && Math.abs(player.body.velocity.y) < 0.01) {
+    player.setVelocityY(-7);
+  }
+}
+
+
+function collectStar (player, star)
+{
+    star.disableBody(true, true);
+
+    //  Add and update the score
+    score += 10;
+    scoreText.setText('Score: ' + score);
+
+    if (stars.countActive(true) === 0)
+    {
+        //  A new batch of stars to collect
+        stars.children.iterate(function (child) {
+
+            child.enableBody(true, child.x, 0, true, true);
+
+        });
+
+        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        var bomb = bombs.create(x, 16, 'bomb');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        bomb.allowGravity = false;
+
+    }
+}
+
+function hitBomb (player, bomb)
+{
+    this.physics.pause();
+
+    player.setTint(0xff0000);
+
+    player.anims.play('turn');
+
+    gameOver = true;
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Making your first Phaser 3 Game - Part 1</title>
+    <!-- Loads phaser into your code -->
+    <script src="./phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    //Configuration of phaser
+    var config = {
+        type: Phaser.AUTO,
+        //The size of the screen
+        width: 800, 
+        height: 600,
+        //Actions that now are empty
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    var game = new Phaser.Game(config); //Starts the game with the configuration
+
+    //We have told it to do nothing at this momment
+    function preload ()
+    {
+    }
+
+    function create ()
+    {
+    }
+
+    function update ()
+    {
+    }
+
+</script>
+
+</body>
+</html>
