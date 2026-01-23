@@ -91,6 +91,8 @@
 
     function update ()
     {
+        //These are the movements:
+
         if (cursors.left.isDown)
         {
             player.setVelocityX(-160);
@@ -110,6 +112,7 @@
             player.anims.play('turn');
         }
 
+        //This is the jump
         if (cursors.up.isDown && player.body.touching.down)
         {
             player.setVelocityY(-330);
