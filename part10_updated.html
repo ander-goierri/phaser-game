@@ -191,10 +191,7 @@ function update ()
             player.anims.play("idle-left", true);
         } else if(lastDirection === "right") {
             player.anims.play("idle-right", true);
-        } else {
-            player.anims.play('turn');
         }
-
     }
 
     if (cursors.up.isDown && player.body.touching.down)
