@@ -21,7 +21,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 300 },
+            gravity: { y: 320 },
             debug: false
         }
     },
@@ -40,16 +40,20 @@ var cursors;
 var score = 0;
 var gameOver = false;
 var scoreText;
+var lastDirection;
+
 
 var game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.image('sky', 'assets/sky.png');
-    this.load.image('ground', 'assets/platform.png');
-    this.load.image('star', 'assets/star.png');
+    this.load.image('sky', 'assets/sky_flowers.png');
+    this.load.image('ground', 'assets/ground.png');
+    this.load.image('platform2', 'assets/platform2.png');
+    this.load.image('platform', 'assets/platform.png');
+    this.load.image('star', 'assets/green_star.png');
     this.load.image('bomb', 'assets/bomb.png');
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('dude', 'assets/mario2.png', { frameWidth: 32, frameHeight: 48 });
 }
 
 function create ()
@@ -65,9 +69,9 @@ function create ()
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
     //  Now let's create some ledges
-    platforms.create(600, 400, 'ground');
-    platforms.create(50, 250, 'ground');
-    platforms.create(750, 220, 'ground');
+    platforms.create(600, 400, 'platform2');
+    platforms.create(50, 250, 'platform2');
+    platforms.create(750, 220, 'platform2');
 
     // The player and its settings
     player = this.physics.add.sprite(100, 450, 'dude');
@@ -85,16 +89,28 @@ function create ()
     });
 
     this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    this.anims.create({
         key: 'turn',
         frames: [ { key: 'dude', frame: 4 } ],
         frameRate: 20
     });
 
     this.anims.create({
-        key: 'right',
-        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-        frameRate: 10,
-        repeat: -1
+        key: 'idle-left',
+        frames: [{ key: 'dude', frame: 0 }],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'idle-right',
+        frames: [{ key: 'dude', frame: 5 }],
+        frameRate: 20
     });
 
     //  Input Events
@@ -137,23 +153,48 @@ function update ()
         return;
     }
 
+
     if (cursors.left.isDown)
     {
         player.setVelocityX(-160);
 
         player.anims.play('left', true);
+
+        lastDirection = "left";
+
     }
     else if (cursors.right.isDown)
     {
         player.setVelocityX(160);
 
         player.anims.play('right', true);
+
+        lastDirection = "right";
+    }
+    else if (cursors.down.isDown)
+    {
+        player.setVelocityX(0);
+
+        if (player.body.velocity.y < 200) {
+            player.setVelocityY(200);
+        }
+        if (player.body.blocked.down) {
+            player.anims.play('turn', true);
+        }
+        lastDirection = "turn";
     }
     else
     {
         player.setVelocityX(0);
 
-        player.anims.play('turn');
+        if (lastDirection === "left") {
+            player.anims.play("idle-left", true);
+        } else if(lastDirection === "right") {
+            player.anims.play("idle-right", true);
+        } else {
+            player.anims.play('turn');
+        }
+
     }
 
     if (cursors.up.isDown && player.body.touching.down)
