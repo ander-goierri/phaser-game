@@ -36,7 +36,7 @@
     var stars;
     var platforms;
     var cursors;
-    var score = 0;
+    var score = 0; //This is a new variable
     var scoreText;
 
     var game = new Phaser.Game(config);
@@ -101,7 +101,7 @@
 
         });
 
-        scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+        scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' }); //The message of the score
 
         this.physics.add.collider(player, platforms);
         this.physics.add.collider(stars, platforms);
@@ -140,7 +140,7 @@
     {
         star.disableBody(true, true);
 
-        score += 10;
+        score += 10; //One they collect the stars the score is increasing
         scoreText.setText('Score: ' + score);
     }
 

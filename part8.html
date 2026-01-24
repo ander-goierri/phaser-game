@@ -87,12 +87,25 @@
 
         cursors = this.input.keyboard.createCursorKeys();
 
+        //It adds the start its and is size
         stars = this.physics.add.group({
             key: 'star',
             repeat: 11,
             setXY: { x: 12, y: 0, stepX: 70 }
         });
+        /**
+        *
+        * setXY: { x: 12, y: 0, stepX: 70 }
+            Automatically positions them:
 
+            first star at (12, 0)
+
+            next one at (12 + 70, 0)
+
+            then (12 + 140, 0) ...
+        */
+
+        //It gives the stars a random bounce
         stars.children.iterate(function (child) {
 
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
@@ -101,8 +114,25 @@
 
         this.physics.add.collider(player, platforms);
         this.physics.add.collider(stars, platforms);
+        /**
+         * 
+         * The star will land on the floor instead of falling through it.
+         */
 
         this.physics.add.overlap(player, stars, collectStar, null, this);
+        /**
+         * 
+         * overlap()
+            Objects touch, but do NOT push each other
+            It just triggers a function.
+
+            So here:
+
+            player can pass through stars
+
+            but touching them triggers collectStar
+
+        */
     }
 
     function update ()
