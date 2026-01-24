@@ -7,13 +7,18 @@
     <script src="./phaser.js"></script>
     <style type="text/css">
         body {
+            background-color: #e6ecf9;
             margin: 0;
+            height: 100vh;
+        }
+        .body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #0f172a;
-            /* Dark background */
+        }
+
+        h2 {
+            text-align: center;
         }
 
         #game-container {
@@ -25,14 +30,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #0f172a;
         }
     </style>
 </head>
 
 <body>
-
-    <div id="game-container"></div>
+    <h2>Phaser 3 Game</h2>
+    <div class="body">
+        <div id="game-container"></div>
+    </div>
 
     <script type="text/javascript">
 
