@@ -1,0 +1,17 @@
+.game {
+    display: flex; /* Flex for aligning items in the center*/
+    justify-content: center;
+    align-items: center;
+}
+
+/* This is the game container box */
+#game-container {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 810px;
+    height: 610px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
